@@ -1,5 +1,7 @@
 import crypto from "crypto";
 
+import canonicalStringify from "../utils/canonicalStringify.js";
+
 class Block {
     constructor(index, timestamp, data, previousHash = "") {
         this.index = index;
@@ -15,7 +17,7 @@ class Block {
         const blockData =
             this.index +
             this.timestamp +
-            JSON.stringify(this.data) +
+            canonicalStringify(this.data) +
             this.previousHash +
             this.nonce;
 
