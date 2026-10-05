@@ -24,6 +24,15 @@ class Block {
             .update(blockData)
             .digest("hex");
     }
+
+    mineBlock(difficulty) {
+        const target = "0".repeat(difficulty);
+
+        while (!this.hash.startsWith(target)) {
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
+    }
 }
 
 export default Block;
