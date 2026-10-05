@@ -38,6 +38,18 @@ class Blockchain {
     }
 
     addTransaction(transaction) {
+        const { serialNumber, from, to } = transaction;
+
+        if (!serialNumber || !from || !to) {
+            throw new Error("Missing transaction data");
+        }
+
+        const currentOwner = this.getCurrentOwner(serialNumber);
+
+        if (currentOwner && currentOwner !== from) {
+            throw new Error("Sender is not the current owner");
+        }
+
         this.pendingTransactions.push(transaction);
 
         return transaction;
@@ -62,6 +74,30 @@ class Blockchain {
         this.pendingTransactions = [];
 
         return newBlock;
+    }
+
+    getCurrentOwner(serialNumber) {
+        let currentOwner = null;
+
+        for (const block of this.chain) {
+            if (!Array.isArray(block.data)) {
+                continue;
+            }
+
+            for (const transaction of block.data) {
+                if (transaction.serialNumber === serialNumber) {
+                    currentOwner = transaction.to;
+                }
+            }
+        }
+
+        for (const transaction of this.pendingTransactions) {
+            if (transaction.serialNumber === serialNumber) {
+                currentOwner = transaction.to;
+            }
+        }
+
+        return currentOwner;
     }
 }
 
