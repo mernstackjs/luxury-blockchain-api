@@ -1,10 +1,16 @@
+import "dotenv/config";
 import Block from "./Block.js";
 
 class Blockchain {
     constructor() {
+        const difficulty = Number(process.env.POW_DIFFICULTY ?? 1);
+        if (!Number.isInteger(difficulty) || difficulty < 1) {
+            throw new Error("Invalid POW difficulty");
+        }
+
         this.chain = [this.createGenesisBlock()];
         this.pendingTransactions = [];
-        this.difficulty = 2;
+        this.difficulty = difficulty;
     }
 
     createGenesisBlock() {
