@@ -21,6 +21,21 @@ class Blockchain {
     getLatestBlock() {
         return this.chain[this.chain.length - 1];
     }
+
+    addBlock(data) {
+        const newBlock = new Block(
+            this.chain.length,
+            Date.now(),
+            data,
+            this.getLatestBlock().hash
+        );
+
+        newBlock.mineBlock(this.difficulty);
+
+        this.chain.push(newBlock);
+
+        return newBlock;
+    }
 }
 
 export default Blockchain;
