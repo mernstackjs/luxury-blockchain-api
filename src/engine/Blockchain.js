@@ -28,26 +28,25 @@ class Blockchain {
         return this.chain[this.chain.length - 1];
     }
 
-    addBlock(data) {
-        const newBlock = new Block(
-            this.chain.length,
-            Date.now(),
-            data,
-            this.getLatestBlock().hash
-        );
 
-        newBlock.mineBlock(this.difficulty);
-
-        this.chain.push(newBlock);
-
-        return newBlock;
-    }
 
     addTransaction(transaction) {
         const { serialNumber, from, to } = transaction;
 
         if (!serialNumber || !from || !to) {
             throw new Error("Missing transaction data");
+        }
+
+        if (
+            typeof serialNumber !== "string" ||
+            typeof from !== "string" ||
+            typeof to !== "string"
+        ) {
+            throw new Error("Invalid transaction data");
+        }
+
+        if (from === to) {
+            throw new Error("Sender and receiver cannot be the same");
         }
 
         const currentOwner = this.getCurrentOwner(serialNumber);

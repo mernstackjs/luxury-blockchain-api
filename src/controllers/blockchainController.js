@@ -18,11 +18,11 @@ export function createTransaction(req, res, next) {
             transaction
         });
     } catch (error) {
-        if (error.message === "Missing transaction data") {
+        if (error.message === "Missing transaction data" || error.message === "Invalid transaction data") {
             error.statusCode = 400;
         }
 
-        if (error.message === "Sender is not the current owner") {
+        if (error.message === "Sender is not the current owner" || error.message === "Sender and receiver cannot be the same") {
             error.statusCode = 422;
         }
 
