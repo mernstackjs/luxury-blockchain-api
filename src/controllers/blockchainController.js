@@ -6,3 +6,12 @@ export function getChain(req, res) {
         pendingTransactions: blockchain.pendingTransactions
     });
 }
+
+export function createTransaction(req, res) {
+    const transaction = blockchain.addTransaction(req.body);
+
+    res.status(201).json({
+        message: "Transaction added",
+        transaction
+    });
+}
