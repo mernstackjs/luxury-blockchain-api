@@ -105,4 +105,32 @@ describe("Blockchain API", () => {
         expect(response.body.message)
             .toBe("Sender is not the current owner");
     });
+
+    it("returns 400 for invalid transaction data", async () => {
+        const response = await request(app)
+            .post("/api/transactions")
+            .send({
+                serialNumber: 123,
+                from: "Rolex",
+                to: "Ahmed"
+            });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe("Invalid transaction data");
+    });
+
+    it("returns 422 when sender and receiver are the same", async () => {
+        const response = await request(app)
+            .post("/api/transactions")
+            .send({
+                serialNumber: "ROLEX-001",
+                from: "Ahmed",
+                to: "Ahmed"
+            });
+
+        expect(response.status).toBe(422);
+
+        expect(response.body.message)
+            .toBe("Sender and receiver cannot be the same");
+    });
 });

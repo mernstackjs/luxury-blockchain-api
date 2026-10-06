@@ -73,4 +73,28 @@ describe("Blockchain", () => {
 
         expect(blockchain.isChainValid()).toBe(false);
     });
+
+    it("rejects invalid transaction data", () => {
+        const blockchain = new Blockchain();
+
+        expect(() => {
+            blockchain.addTransaction({
+                serialNumber: 123,
+                from: "Rolex",
+                to: "Ahmed"
+            });
+        }).toThrow("Invalid transaction data");
+    });
+
+    it("rejects transaction with same sender and receiver", () => {
+        const blockchain = new Blockchain();
+
+        expect(() => {
+            blockchain.addTransaction({
+                serialNumber: "ROLEX-001",
+                from: "Ahmed",
+                to: "Ahmed"
+            });
+        }).toThrow("Sender and receiver cannot be the same");
+    });
 });
