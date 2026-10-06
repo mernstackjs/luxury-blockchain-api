@@ -122,6 +122,39 @@ class Blockchain {
 
         return true;
     }
+
+    getProductHistory(serialNumber) {
+        const history = [];
+
+        for (const block of this.chain) {
+            if (!Array.isArray(block.data)) {
+                continue;
+            }
+
+            for (const transaction of block.data) {
+                if (transaction.serialNumber === serialNumber) {
+                    history.push({
+                        from: transaction.from,
+                        to: transaction.to,
+                        blockIndex: block.index,
+                        timestamp: block.timestamp
+                    });
+                }
+            }
+        }
+
+        if (history.length === 0) {
+            return null;
+        }
+
+        const currentOwner = history[history.length - 1].to;
+
+        return {
+            serialNumber,
+            currentOwner,
+            history
+        };
+    }
 }
 
 export default Blockchain;
