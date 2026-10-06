@@ -7,13 +7,28 @@ export function getChain(req, res) {
     });
 }
 
-export function createTransaction(req, res) {
-    const transaction = blockchain.addTransaction(req.body);
+export function createTransaction(req, res, next) {
+    try {
 
-    res.status(201).json({
-        message: "Transaction added",
-        transaction
-    });
+
+        const transaction = blockchain.addTransaction(req.body);
+
+        res.status(201).json({
+            message: "Transaction added",
+            transaction
+        });
+    } catch (error) {
+        if (error.message === "Missing transaction data") {
+            error.statusCode = 400;
+        }
+
+        if (error.message === "Sender is not the current owner") {
+            error.statusCode = 422;
+        }
+
+        next(error);
+
+    }
 }
 
 export function mineTransactions(req, res) {
